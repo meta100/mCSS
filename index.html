@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+    <style type="text/css">
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+      div {
+        margin: 10px;
+        padding: 2px;
+        height: 100px;
+        width: 100px;
+        background-color: blue;
+      }
+      #example1 {
+        border-radius: 10px;
+      }
+      #example2 {
+        box-shadow: 10px 10px 5px #888;
+      }
+      #example3 {
+        transform: rotate(-15deg);
+      }
+      #example4 {
+        opacity: .5;
+      }
+    </style>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js" charset="utf-8"></script>
+		<script type="text/javascript" src="javascripts/csshooks/bgpos.js" charset="utf-8"></script>
+		<script type="text/javascript" src="javascripts/csshooks/borderimage.js" charset="utf-8"></script>
+		<script type="text/javascript" src="javascripts/csshooks/borderradiusalt.js" charset="utf-8"></script>
+		<script type="text/javascript" src="javascripts/csshooks/boxreflect.js" charset="utf-8"></script>
+		<script type="text/javascript" src="javascripts/csshooks/boxshadow.js" charset="utf-8"></script>
+		<script type="text/javascript" src="javascripts/csshooks/boxsizing.js" charset="utf-8"></script>
+		<script type="text/javascript" src="javascripts/csshooks/color.js" charset="utf-8"></script>
+		<script type="text/javascript" src="javascripts/csshooks/columns.js" charset="utf-8"></script>
+		<script type="text/javascript" src="javascripts/csshooks/gradients.js" charset="utf-8"></script>
+		<script type="text/javascript" src="javascripts/csshooks/marginpadding.js" charset="utf-8"></script>
+		<script type="text/javascript" src="javascripts/csshooks/rotate.js" charset="utf-8"></script>
+		<script type="text/javascript" src="javascripts/csshooks/scale.js" charset="utf-8"></script>
+		<script type="text/javascript" src="javascripts/csshooks/textshadow.js" charset="utf-8"></script>
+		<script type="text/javascript" src="javascripts/csshooks/transform.js" charset="utf-8"></script>
+		<script type="text/javascript" src="javascripts/csshooks/transition.js" charset="utf-8"></script>
+		<script type="text/javascript" src="javascripts/csshooks/userselect.js" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+
+      $(document).ready(function () {
+
+        $('div').css({'background-color': '#CCC'}, 'high');
+      });
+    </script>
+    <script src="javascripts/mCSS.js" type="text/javascript" charset="utf-8"></script>    
+	</head>
+	<body>
+    <h2>mCSS an extension to jQuery.css() </h2>
+    <p>
+      <i>requires jQuery 1.4.3 or higher.</i>
+      <br/>
+      mCSS extends the jQuery.css() adding the following calls <i>(without changing the original use):</i>
+    </p>
+    <ul>
+      <li>$('foo').css('property', 'value') <i>- same result as before this extension.</i></li>
+      <li>$('foo').css({'property': 'value'}) <i>- same result as before this extension.</i></li>
+      <li>$('foo').css('property', 'value', 'inline') <i>- same result as before this extension.</i></li>
+      <li>$('foo').css({'property': 'value'}, 'inline') <i>- same result as before this extension.</i></li>
+      <li>$('foo').css('property') <i>- same result as before this extension.</i></li>
+      <li>$('foo').css('property', 'value', 'low') <i>- adds css to a style sheet prepended to the &lt;head&gt;.</i></li>
+      <li>$('foo').css({'property': 'value'}, 'low') <i>- adds css to a style sheet prepended to the &lt;head&gt;.</i></li>
+      <li>$('foo').css('property', 'value', 'high') <i>- adds css to a style sheet appended to the &lt;body&gt;.</i></li>
+      <li>$('foo').css({'property': 'value'}, 'high') <i>- adds css to a style sheet appended to the &lt;body&gt;.</i></li>
+      <li>$('foo').css() <i>- same result as before this extension.</i></li>
+      <li>$('foo').cssCopyTo('bar') <i>- copies the diff css from $('foo') to $('bar') and applies to style attribute - 'bar' can be a selector or an object.</i></li>
+      <li>$('foo').cssCopyTo('bar', 'inline') <i>- copies the diff css from $('foo') to $('bar') and applies to style attribute.</i></li>
+      <li>$('foo').cssCopyTo('bar', 'low') <i>- copies the diff css from $('foo') to $('bar') and applies to a style sheet prepended to the &lt;head&gt;.</i></li>
+      <li>$('foo').cssCopyTo('bar', 'high') <i>- copies the diff css from $('foo') to $('bar') and applies to a style sheet appended to the &lt;body&gt;.</i></li>
+      <li>$('foo').cssSyncTo('bar') <i>- will apply any $.css changes made to 'foo' also to 'bar.</i></li>
+    </ul>
+    <p>mCSS uses csshooks</p>
+    <p><b>Example 1: Border Radius</b></p>
+    <code>
+      #example1 {
+        border-radius: 10px;
+      }
+    </code>
+    <div id="example1">
+    </div>
+    <p><b>Example 2: Box Shadow</b></p>
+    <code>
+      #example2 {
+        box-shadow: 10px 10px 5px #888;
+      }
+    </code>
+    <div id="example2">
+    </div>
+    <p><b>Example 3: Rotate</b></p>
+    <code>
+      #example3 {
+        transform: rotate(-15deg);
+      }
+    </code>
+    <div id="example3">
+    </div>
+    <p><b>Example 4: Rotate</b></p>
+    <code>
+      #example4 {
+        opacity: .5;
+      }
+    </code>
+    <div id="example4">
+    </div>
+	</body>
+</html>
