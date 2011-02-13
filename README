@@ -1,0 +1,26 @@
+mCSS
+Version: 1.0
+
+Copyright (c) 2011 Meta100 LLC.
+http://www.meta100.com/
+
+Licensed under the MIT license 
+http://www.opensource.org/licenses/mit-license.php 
+
+Extention of jQuery css().
+Call same as jQuery css() but with an added optional precedence argument.
+Example1: $('foo').css('property', 'value') - same result as before this extention.
+Example2: $('foo').css({'property': 'value'}) - same result as before this extention.
+Example3: $('foo').css('property', 'value', 'inline') - same result as before this extention.
+Example4: $('foo').css({'property': 'value'}, 'inline') - same result as before this extention.
+Example5: $('foo').css('property') - same result as before this extention.
+Example6: $('foo').css('property', 'value', 'low') - adds css to a style sheet prepended to the <head>.
+Example7: $('foo').css({'property': 'value'}, 'low') - adds css to a style sheet prepended to the <head>.
+Example8: $('foo').css('property', 'value', 'high') - adds css to a style sheet appended to the <body>.
+Example9: $('foo').css({'property': 'value'}, 'high') - adds css to a style sheet appended to the <body>.
+Example10: $('foo').css() - returns an object of the full css applied to <foo>.
+Example11: $('foo').cssCopyTo('bar') - copies the diff css from $('foo') to $('bar') and applies to style attribute - 'bar' can be a selector or an object.
+Example12: $('foo').cssCopyTo('bar', 'inline') - copies the diff css from $('foo') to $('bar') and applies to style attribute.
+Example13: $('foo').cssCopyTo('bar', 'low') - copies the diff css from $('foo') to $('bar') and applies to a style sheet prepended to the <head>.
+Example14: $('foo').cssCopyTo('bar', 'high') - copies the css from $('foo') to $('bar') and applies to a style sheet appended to the <body>.
+Example15: $('foo').cssSyncTo('bar') - will apply any $.css changes made to 'foo' also to 'bar.

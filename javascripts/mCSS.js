@@ -9,24 +9,6 @@
   http://www.opensource.org/licenses/mit-license.php 
 */
 
-// Extention of jQuery css().
-// Call same as jQuery css() but with an added optional precedence argument.
-// Example1: $('foo').css('property', 'value') - same result as before this extention.
-// Example2: $('foo').css({'property': 'value'}) - same result as before this extention.
-// Example3: $('foo').css('property', 'value', 'inline') - same result as before this extention.
-// Example4: $('foo').css({'property': 'value'}, 'inline') - same result as before this extention.
-// Example5: $('foo').css('property') - same result as before this extention.
-// Example6: $('foo').css('property', 'value', 'low') - adds css to a style sheet prepended to the <head>.
-// Example7: $('foo').css({'property': 'value'}, 'low') - adds css to a style sheet prepended to the <head>.
-// Example8: $('foo').css('property', 'value', 'high') - adds css to a style sheet appended to the <body>.
-// Example9: $('foo').css({'property': 'value'}, 'high') - adds css to a style sheet appended to the <body>.
-// Example10: $('foo').css() - returns an object of the full css applied to <foo>.
-// Example11: $('foo').cssCopyTo('bar') - copies the diff css from $('foo') to $('bar') and applies to style attribute - 'bar' can be a selector or an object.
-// Example12: $('foo').cssCopyTo('bar', 'inline') - copies the diff css from $('foo') to $('bar') and applies to style attribute.
-// Example13: $('foo').cssCopyTo('bar', 'low') - copies the diff css from $('foo') to $('bar') and applies to a style sheet prepended to the <head>.
-// Example14: $('foo').cssCopyTo('bar', 'high') - copies the css from $('foo') to $('bar') and applies to a style sheet appended to the <body>.
-// Example15: $('foo').cssSyncTo('bar') - will apply any $.css changes made to 'foo' also to 'bar.
-
 (function($){
 
   var include_external_css = false, // Set true to parse links (external) css too.
@@ -37,10 +19,8 @@
 
   $.fn.css = function (temp_property, value, precedence) {
 
-    var selector = $(this).selector.replace('\\', ''),
+    var selectors = $.fn.css.selectorParts($(this).selector),
         property = {};
-
-    for (var v in $.cssPseudoClasses) selector = selector.replace(new RegExp($.rEscape(v), "g"), $.cssPseudoClasses[v]);
 
     if (typeof temp_property == 'string' && typeof value != 'undefined') {
 
@@ -56,25 +36,21 @@
     }
 
     if (precedence != 'high' && precedence != 'low') precedence = 'inline';
-
-    if (precedence == 'inline' && arguments.length) return this.each(function () {
-
-      $(this).inlineCSS(property);
-      $.fn.css.selectorParts(function (selector) {
-
-        $(selector).inlineCSS(property);
-      });
-    });
-
     if (!arguments.length) return $(this).cssCopy();
 
-    $.fn.css.add(selector.split(','), property, precedence);
+    if (precedence == 'inline') {
+
+      for (var s in selectors) $(selectors[s]).inlineCSS(property);
+
+      return $((this)).inlineCSS(property);
+    }
+
+    $.fn.css.add(selectors, property, precedence);
 
     return this;
   };
 
   $.fn.css.globals = {
-    sync: {},
     browserSpecific: false,
     browsers: {
       mozilla: "-moz-", 
@@ -173,13 +149,7 @@
 
     for (var s = 0; s < selector.length; s++) {
   
-      selector[s] = $.trim(selector[s]);
       output = [];
-
-      $.fn.css.selectorParts(selector[s], function (s) {
-  
-        selector.push(s);
-      });
 
       for (var p in property) {
 
@@ -210,8 +180,8 @@
 
       rulesCount = sheet[$g.rules].length;
 
-      if ($g.insert == 'insertRule') sheet[$g.insert](selector[s] + '{' + output.join(';') + '}', rulesCount);
-      else sheet[$g.insert](selector[s], output.join(';') + '', rulesCount);
+      if ($g.insert == 'insertRule') sheet[$g.insert]($.rCSSescape(selector[s]) + '{' + output.join(';') + '}', rulesCount);
+      else sheet[$g.insert]($.rCSSescape(selector[s]), output.join(';') + '', rulesCount);
     }
 
     return this;
@@ -244,17 +214,21 @@
     $.fn.css.error('ERROR: Could not create stylesheet.');
   };
 
-  $.fn.css.selectorParts = function (selector, handler) { // ToDo: Good start, but sure it will need refining.
+  $.fn.css.selectorParts = function (selector) { // ToDo: Good start, but sure it will need refining.
 
-    var new_selector;
+    var selectors = selector.replace('\\', '').split(',');
 
-    for (var x in $g.sync) {
+    for (var s in selectors) {
+    
+      selectors[s] = $.trim(selectors[s]);
 
-      new_selector = selector.replace(x, $g.sync[x]);
+      for (var x in $.cssSync) {
 
-      if ($(selector)[0]) handler($g.sync[x]);
-      else if ($(new_selector)[0]) handler(new_selector);
+        if (selectors[s].indexOf($.unCamelCase(x)) > -1) selectors = selectors.concat($.cssSync[x](selectors[s]));
+      }
     }
+
+    return selectors;
   };
 
   $.fn.css.parse = function () {
@@ -267,15 +241,14 @@
 
       var properties = {};
 
-      if ($g.sync[c]) {
+      for (var x in $.cssSync) {
 
-        $($g.sync[c]).css(css[c], 'high');
-      } else {
+        if (c.indexOf($.unCamelCase(x)) > -1) $($.rCSSescape(c)).css(css[c], 'high');
+      }
 
-        for (var p in css[c]) {
-  
-          if ($.cssHooks[$.camelCase(p)]) $(c).css(p, css[c][p], 'high');
-        }
+      for (var p in css[c]) {
+
+        if ($.cssHooks[$.camelCase(p)]) $(c).css(p, css[c][p], 'high');
       }
     }
 
@@ -537,7 +510,7 @@
 
   $.fn.cssSyncTo = function (that, precedence) {
 
-    $g.sync[$(this).selector] = that;
+    $.cssSync[$(this).selector] = that;
     $(this).cssCopyTo(that, precedence);
 
     return this;
@@ -588,10 +561,16 @@
     	});
   	},
     rEscape: function(text) {
-        return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+      return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
   	},
-  	cssPseudoClasses: {
-  		":autofill": ":" + $.fn.css.globals.browserSpecific + "autofill"
+    rCSSescape: function(text) {
+      return text.replace(/([\:])+/g, "\\$1");
+  	},
+  	cssSync: {
+
+      autofill: function (text) {
+        return text.replace(":autofill", $.fn.css.globals.browserSpecific + "autofill");
+      }
     }
   });
 })(jQuery);
