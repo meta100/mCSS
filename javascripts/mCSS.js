@@ -508,14 +508,6 @@
     else alert(error);
   };
 
-  $.fn.cssSyncTo = function (that, precedence) {
-
-    $.cssSync[$(this).selector] = that;
-    $(this).cssCopyTo(that, precedence);
-
-    return this;
-  };
-
   $.fn.cssMergeIn = function (that, precedence) {
 
     var working_span = $('<span/>').appendTo('body').css(that),
